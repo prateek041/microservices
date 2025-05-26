@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-catalog-service # This is the DNS name other services will use this to communicate with this service.
+  labels:
+    app: product-catalog
+spec:
+  selector: # Specifies which Pods this service will route traffic to. It selects Pods with label app:product-catalog
+    app: product-catalog 
+  # type: 
+  ports: # List of ports this service exposes.
+    - protocol: TCP # Network protocol
+      port: 8080 # Port on which the service will be accessible within the cluster.
+      targetPort: 8080 # Port at which container running in the pod is listening to.
+  type: ClusterIP # expose the service internally within the cluster.
+---
+

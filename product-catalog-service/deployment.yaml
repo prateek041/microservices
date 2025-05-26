@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-catalog-deployment 
+  labels:
+    app: product-catalog 
+spec:
+  selector:
+    matchLabels:
+      app: product-catalog 
+  replicas: 1
+  #TODO: Need to read more about rolling strategies.
+  # strategy: 
+  #   rollingUpdate:
+  #     maxSurge: 25%
+  #     maxUnavailable: 25%
+  #   type: RollingUpdate
+  template:
+    metadata:
+      # annotations:
+      #   kubectl.kubernetes.io/default-container:  myjob
+      labels:
+        app: product-catalog 
+    spec:
+      #TODO: Need to read more about Init containers configuration.
+      # initContainers: 
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name: product-catalog 
+        image: prateek041/product-catalog:v1.1
+        ports:
+            - containerPort: 8080
+        # imagePullPolicy: 
+        #TODO: Need to read more about resource configuration.
+        # resources:
+        #   requests:
+        #     cpu: 100m
+        #     memory: 100Mi
+        #   limits:
+        #     cpu: 100m
+        #     memory: 100Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            #TODO: This needs to be a separate endpoint in production systems.
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          # timeoutSeconds: 2
+          # successThreshold: 1
+          # failureThreshold: 3
+          periodSeconds: 10
+      #   env:
+      #   - name: DB_HOST
+      #     valueFrom:
+      #       configMapKeyRef:
+      #         name: myjob
+      #         key: DB_HOST
+      #   ports:
+      #   - containerPort: 80
+      #     name: myjob
+      #   volumeMounts:
+      #   - name: localtime
+      #     mountPath: /etc/localtime
+      # volumes:
+      #   - name: localtime
+      #     hostPath:
+      #       path: /usr/share/zoneinfo/Asia/Taipei
+      # restartPolicy: Always
+---
+

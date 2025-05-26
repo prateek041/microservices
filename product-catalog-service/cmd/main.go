@@ -10,6 +10,11 @@ import (
 	"github.com/prateek041/product-catalog-service/internal/service"
 )
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Ok"))
+}
+
 func main() {
 	// Initialize the in-memory product repository
 	productRepo := data.NewInMemoryProductRepository()
@@ -30,6 +35,9 @@ func main() {
 	r.HandleFunc("/products/{id}", productHandler.DeleteProduct).Methods("DELETE")
 	r.HandleFunc("/products", productHandler.ListProducts).Methods("GET")
 
+	// Add the health check endpoint.
+	r.HandleFunc("/health", healthHandler).Methods("GET")
+
 	// Start the HTTP server
 	port := ":8080" // Can be configured via environment variables later on.
 	log.Printf("Product Catalog Service listening on port %s", port)
@@ -38,4 +46,3 @@ func main() {
 		log.Fatalf("Error starting server: %v", err)
 	}
 }
-
