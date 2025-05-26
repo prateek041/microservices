@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/prateek041/product-catalog-service/internal/data"
@@ -16,6 +17,18 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	port := os.Getenv("service_port")
+	if port == "" {
+		port = "8080" // Default port.
+	}
+
+	logLevel := os.Getenv("log_level")
+	if logLevel == "" {
+		logLevel = "INFO" // Default Log Level.
+	}
+
+	log.Printf("Service listening on port %s with log level %s", port, logLevel)
 	// Initialize the in-memory product repository
 	productRepo := data.NewInMemoryProductRepository()
 
@@ -39,7 +52,6 @@ func main() {
 	r.HandleFunc("/health", healthHandler).Methods("GET")
 
 	// Start the HTTP server
-	port := ":8080" // Can be configured via environment variables later on.
 	log.Printf("Product Catalog Service listening on port %s", port)
 	err := http.ListenAndServe(port, r)
 	if err != nil {

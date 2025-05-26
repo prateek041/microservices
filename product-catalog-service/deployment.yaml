@@ -29,7 +29,7 @@ spec:
           # - Each init container must complete successfully before the next one starts.
       containers:
       - name: product-catalog 
-        image: prateek041/product-catalog:v1.1
+        image: prateek041/product-catalog:v1.2
         ports:
             - containerPort: 8080
         # imagePullPolicy: 
@@ -60,6 +60,9 @@ spec:
           # successThreshold: 1
           # failureThreshold: 3
           periodSeconds: 10
+        envFrom: # Refer a configMap.
+          - configMapRef:
+              name: product-catalog-config
       #   env:
       #   - name: DB_HOST
       #     valueFrom:
