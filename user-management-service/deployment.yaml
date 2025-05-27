@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-management-deployment 
+  labels:
+    app: user-management 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-management 
+  template:
+    metadata:
+      labels:
+        app: user-management 
+    spec:
+      containers:
+        - name: user-management
+          image: prateek041/user-management:v1.3 # Replace with your image
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SERVICE_PORT
+              value: "8081"
+            - name: JWT_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: signing-key
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5
