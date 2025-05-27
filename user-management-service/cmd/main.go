@@ -10,14 +10,23 @@ import (
 	"github.com/prateek041/user-management-service/internal/service"
 )
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Ok"))
+}
+
 func main() {
 	userRepo := data.NewInMemoryUserRepository()
 	userService := service.NewDefaultUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
+	authHandler := handler.NewAuthHandler(userService)
 
 	r := mux.NewRouter()
+
+	r.HandleFunc("/health", healthHandler) // health check handler.
+
 	r.HandleFunc("/users", userHandler.CreateUser).Methods("POST")
-	r.HandleFunc("/auth/login", userHandler.AuthenticateUser).Methods("POST")
+	r.HandleFunc("/auth/login", authHandler.Login).Methods("POST")
 
 	port := ":8081"
 	log.Printf("User Management Service listening on port %s", port)
