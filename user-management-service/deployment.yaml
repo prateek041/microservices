@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: user-management
-          image: prateek041/user-management:v1.5 # Replace with your image
+          image: prateek041/user-management:v1.6 # Replace with your image
           ports:
             - containerPort: 8081
           env:

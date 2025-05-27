@@ -8,7 +8,7 @@ import (
 )
 
 type UserRepository interface {
-	Create(user *model.User) error
+	Create(user *model.User) (*model.User, error)
 	Get(id string) (*model.User, error)
 	GetByUsername(username string) (*model.User, error)
 }
@@ -24,14 +24,14 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 	}
 }
 
-func (r *InMemoryUserRepository) Create(user *model.User) error {
+func (r *InMemoryUserRepository) Create(user *model.User) (*model.User, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	if _, exists := r.users[user.ID]; exists {
-		return fmt.Errorf("user with ID '%s' already exists", user.ID)
+		return nil, fmt.Errorf("user with ID '%s' already exists", user.ID)
 	}
 	r.users[user.ID] = user
-	return nil
+	return user, nil
 }
 
 func (r *InMemoryUserRepository) Get(id string) (*model.User, error) {

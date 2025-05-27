@@ -10,7 +10,7 @@ import (
 )
 
 type UserService interface {
-	CreateUser(user *model.User) error
+	CreateUser(user *model.User) (*model.User, error)
 	GetUser(id string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	AuthenticateUser(username, password string) (*model.User, error)
@@ -24,7 +24,7 @@ func NewDefaultUserService(repo data.UserRepository) *DefaultUserService {
 	return &DefaultUserService{repo: repo}
 }
 
-func (s *DefaultUserService) CreateUser(user *model.User) error {
+func (s *DefaultUserService) CreateUser(user *model.User) (*model.User, error) {
 	user.ID = uuid.New().String() // Generate a unique ID
 	return s.repo.Create(user)
 }
