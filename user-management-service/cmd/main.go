@@ -25,7 +25,7 @@ func main() {
 
 	r.HandleFunc("/health", healthHandler) // health check handler.
 
-	r.HandleFunc("/users", userHandler.CreateUser).Methods("POST")
+	r.HandleFunc("/auth/users", userHandler.CreateUser).Methods("POST")
 	r.HandleFunc("/auth/login", authHandler.Login).Methods("POST")
 
 	port := ":8081"

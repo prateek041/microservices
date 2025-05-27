@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: prateek041/api-gateway:v1.2 # Replace with your image
+          image: prateek041/api-gateway:v1.3 # Replace with your image
           ports:
             - containerPort: 8000
           env:

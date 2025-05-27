@@ -24,8 +24,8 @@ func main() {
 	// Public routes (no authentication required)
 	public := router.Group("/auth")
 	{
-		public.Any("/login", proxyToService("http://user-management-service:8080"))
-		public.Any("/users", proxyToService("http://user-management-service:8080")) // Assuming signup is here
+		public.Any("/login", proxyToService("http://user-management-service:8081"))
+		public.Any("/users", proxyToService("http://user-management-service:8081")) // Assuming signup is here
 	}
 
 	// Protected routes (authentication required)
@@ -57,6 +57,7 @@ func proxyToService(target string) gin.HandlerFunc {
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 
 	return func(c *gin.Context) {
+		log.Printf("URL: %s", c.Request.URL)
 		proxy.ServeHTTP(c.Writer, c.Request)
 	}
 }
